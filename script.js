@@ -197,3 +197,59 @@ if (form) {
     }, 2000);
   });
 }
+
+const track = document.querySelector('.carousel-track');
+const items = document.querySelectorAll('.carousel-item');
+let index = 0;
+
+// AUTOPLAY
+function autoPlay() {
+  index++;
+  if (index >= items.length) index = 0;
+  updateCarousel();
+}
+
+setInterval(autoPlay, 3000);
+
+function updateCarousel() {
+  const itemWidth = items[0].offsetWidth + 20;
+  track.style.transform = `translateX(-${index * itemWidth}px)`;
+}
+
+// SWIPE MOBILE
+let startX = 0;
+
+track.addEventListener('touchstart', (e) => {
+  startX = e.touches[0].clientX;
+});
+
+track.addEventListener('touchend', (e) => {
+  let endX = e.changedTouches[0].clientX;
+
+  if (startX > endX + 50) {
+    index++;
+  } else if (startX < endX - 50) {
+    index--;
+  }
+
+  if (index < 0) index = 0;
+  if (index >= items.length) index = items.length - 1;
+
+  updateCarousel();
+});
+
+// MODAL (ZOOM)
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
+const close = document.querySelector(".close");
+
+document.querySelectorAll(".carousel-item img").forEach(img => {
+  img.addEventListener("click", () => {
+    modal.style.display = "block";
+    modalImg.src = img.src;
+  });
+});
+
+close.onclick = () => modal.style.display = "none";
+
+modal.onclick = () => modal.style.display = "none";
