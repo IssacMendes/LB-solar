@@ -874,6 +874,16 @@ ul { list-style: none; }
 
   .contact-cards { grid-template-columns: 1fr; }
   .importance-grid { grid-template-columns: 1fr; }
+
+  .steps-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .step-arrow {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
@@ -896,7 +906,7 @@ ul { list-style: none; }
 .carousel-track {
   display: flex;
   gap: 20px;
-  transition: transform 0.5s ease;
+  width: max-content; 
 }
 
 .carousel-item {

@@ -199,22 +199,34 @@ if (form) {
 }
 
 const track = document.querySelector('.carousel-track');
-const items = document.querySelectorAll('.carousel-item');
+let items = document.querySelectorAll('.carousel-item');
+
+// 🔁 DUPLICA OS ITENS (loop infinito)
+track.innerHTML += track.innerHTML;
+
+items = document.querySelectorAll('.carousel-item');
+
 let index = 0;
 
-// AUTOPLAY
 function autoPlay() {
   index++;
-  if (index >= items.length) index = 0;
-  updateCarousel();
+
+  const itemWidth = items[0].offsetWidth + 20;
+
+  track.style.transition = "transform 0.5s ease";
+  track.style.transform = `translateX(-${index * itemWidth}px)`;
+
+  // quando chega na metade (fim "real")
+  if (index >= items.length / 2) {
+    setTimeout(() => {
+      track.style.transition = "none";
+      index = 0;
+      track.style.transform = `translateX(0)`;
+    }, 500);
+  }
 }
 
 setInterval(autoPlay, 3000);
-
-function updateCarousel() {
-  const itemWidth = items[0].offsetWidth + 20;
-  track.style.transform = `translateX(-${index * itemWidth}px)`;
-}
 
 // SWIPE MOBILE
 let startX = 0;
