@@ -265,3 +265,14 @@ document.querySelectorAll(".carousel-item img").forEach(img => {
 close.onclick = () => modal.style.display = "none";
 
 modal.onclick = () => modal.style.display = "none";
+
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme) {
+  document.documentElement.setAttribute("data-theme", savedTheme);
+} else {
+  // detecta preferência do sistema
+  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
+}
