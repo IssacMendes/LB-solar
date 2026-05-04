@@ -198,58 +198,50 @@ if (form) {
   });
 }
 
-const track = document.querySelector('.carousel-track');
-let items = document.querySelectorAll('.carousel-item');
+// ══════════════════════════════
+// CARROSSEL INFINITO
+// ══════════════════════════════
+window.addEventListener("load", () => {
+  const track = document.querySelector(".carousel-track");
 
-// 🔁 DUPLICA OS ITENS (loop infinito)
-track.innerHTML += track.innerHTML;
+  if (!track) return;
 
-items = document.querySelectorAll('.carousel-item');
+  track.innerHTML += track.innerHTML;
 
-let index = 0;
+  const items = document.querySelectorAll(".carousel-item");
+  let index = 0;
 
-function autoPlay() {
-  index++;
+  function getItemWidth() {
+    const item = items[0];
+    const style = window.getComputedStyle(track);
+    const gap = parseInt(style.gap) || 0;
 
-  const itemWidth = items[0].offsetWidth + 20;
-
-  track.style.transition = "transform 0.5s ease";
-  track.style.transform = `translateX(-${index * itemWidth}px)`;
-
-  // quando chega na metade (fim "real")
-  if (index >= items.length / 2) {
-    setTimeout(() => {
-      track.style.transition = "none";
-      index = 0;
-      track.style.transform = `translateX(0)`;
-    }, 500);
+    return item.offsetWidth + gap;
   }
-}
 
-setInterval(autoPlay, 3000);
+  function moveCarousel() {
+    const itemWidth = getItemWidth();
 
-// SWIPE MOBILE
-let startX = 0;
+    track.style.transition = "transform 0.5s ease";
+    track.style.transform = `translateX(-${index * itemWidth}px)`;
+  }
 
-track.addEventListener('touchstart', (e) => {
-  startX = e.touches[0].clientX;
-});
-
-track.addEventListener('touchend', (e) => {
-  let endX = e.changedTouches[0].clientX;
-
-  if (startX > endX + 50) {
+  function autoPlay() {
     index++;
-  } else if (startX < endX - 50) {
-    index--;
+
+    moveCarousel();
+
+    if (index >= items.length / 2) {
+      setTimeout(() => {
+        track.style.transition = "none";
+        index = 0;
+        track.style.transform = "translateX(0)";
+      }, 500);
+    }
   }
 
-  if (index < 0) index = 0;
-  if (index >= items.length) index = items.length - 1;
-
-  updateCarousel();
+  setInterval(autoPlay, 3000);
 });
-
 // MODAL (ZOOM)
 const modal = document.getElementById("modal");
 const modalImg = document.getElementById("modalImg");
@@ -266,13 +258,3 @@ close.onclick = () => modal.style.display = "none";
 
 modal.onclick = () => modal.style.display = "none";
 
-const savedTheme = localStorage.getItem("theme");
-
-if (savedTheme) {
-  document.documentElement.setAttribute("data-theme", savedTheme);
-} else {
-  // detecta preferência do sistema
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.documentElement.setAttribute("data-theme", "dark");
-  }
-}
