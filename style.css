@@ -884,6 +884,10 @@ ul { list-style: none; }
   .step-arrow {
     display: none;
   }
+
+  .installation {
+  overflow: hidden;
+}
 }
 
 @media (max-width: 480px) {
